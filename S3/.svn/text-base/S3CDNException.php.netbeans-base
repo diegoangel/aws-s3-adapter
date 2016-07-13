@@ -1,0 +1,11 @@
+<?php 
+/**
+ * Exceptions para la clase S3CDN
+ * 
+ * @package CDN
+ */ 
+class AuthenticationException extends Exception { }
+class BuckeOperationException extends Exception { }
+class ObjectOperationException extends Exception { }
+class CommandLineException extends Exception { }
+class UnsupportedOperationException extends Exception { }

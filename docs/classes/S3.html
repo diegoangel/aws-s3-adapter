@@ -1,0 +1,485 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>CDN Amazon S3 Refactor » \S3</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">CDN Amazon S3 Refactor</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/CDN.html"><i class="icon-folder-open"></i> CDN</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul><li>todo 
+                <span class="label label-info">2</span>
+</li></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#__construct" title="__construct :: __construct"><span class="description">__construct</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#__toString" title="__toString :: __toString"><span class="description">__toString</span><pre>__toString()</pre></a></li>
+<li class="method public "><a href="#cleanBucket" title="cleanBucket :: cleanBucket"><span class="description">cleanBucket</span><pre>cleanBucket()</pre></a></li>
+<li class="method public "><a href="#connect" title="connect :: connect"><span class="description">connect</span><pre>connect()</pre></a></li>
+<li class="method public "><a href="#createBucket" title="createBucket :: createBucket"><span class="description">createBucket</span><pre>createBucket()</pre></a></li>
+<li class="method public "><a href="#createObjectFromData" title="createObjectFromData :: createObjectFromData"><span class="description">createObjectFromData</span><pre>createObjectFromData()</pre></a></li>
+<li class="method public "><a href="#createObjectFromFile" title="createObjectFromFile :: createObjectFromFile"><span class="description">createObjectFromFile</span><pre>createObjectFromFile()</pre></a></li>
+<li class="method public "><a href="#deleteBucket" title="deleteBucket :: deleteBucket"><span class="description">deleteBucket</span><pre>deleteBucket()</pre></a></li>
+<li class="method public "><a href="#deleteObject" title="deleteObject :: deleteObject"><span class="description">deleteObject</span><pre>deleteObject()</pre></a></li>
+<li class="method public "><a href="#downloadObject" title="downloadObject :: downloadObject"><span class="description">downloadObject</span><pre>downloadObject()</pre></a></li>
+<li class="method public "><a href="#getBucket" title="getBucket :: getBucket"><span class="description">getBucket</span><pre>getBucket()</pre></a></li>
+<li class="method public "><a href="#getBucketList" title="getBucketList :: getBucketList"><span class="description">getBucketList</span><pre>getBucketList()</pre></a></li>
+<li class="method public "><a href="#getBucketPublicUrl" title="getBucketPublicUrl :: getBucketPublicUrl"><span class="description">getBucketPublicUrl</span><pre>getBucketPublicUrl()</pre></a></li>
+<li class="method public "><a href="#getObject" title="getObject :: getObject"><span class="description">getObject</span><pre>getObject()</pre></a></li>
+<li class="method public "><a href="#getObjectDetails" title="getObjectDetails :: getObjectDetails"><span class="description">getObjectDetails</span><pre>getObjectDetails()</pre></a></li>
+<li class="method public "><a href="#getObjectList" title="getObjectList :: getObjectList"><span class="description">getObjectList</span><pre>getObjectList()</pre></a></li>
+<li class="method public "><a href="#getObjectUrl" title="getObjectUrl :: getObjectUrl"><span class="description">getObjectUrl</span><pre>getObjectUrl()</pre></a></li>
+<li class="method public "><a href="#setBucket" title="setBucket :: setBucket"><span class="description">setBucket</span><pre>setBucket()</pre></a></li>
+<li class="method public "><a href="#setBucketPublicUrl" title="setBucketPublicUrl :: setBucketPublicUrl"><span class="description">setBucketPublicUrl</span><pre>setBucketPublicUrl()</pre></a></li>
+<li class="nav-header private">» Private</li>
+<li class="method private "><a href="#logException" title="logException :: logException"><span class="description">logException</span><pre>logException()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="nav-header private">» Private</li>
+<li class="property private "><a href="#%24bucket" title="$bucket :: Nombre del bucket."><span class="description">Nombre del bucket.</span><pre>$bucket</pre></a></li>
+<li class="property private "><a href="#%24bucketPublicUrl" title="$bucketPublicUrl :: URL base del CDN, desde el cual estaran disponibles publicamente los objetos"><span class="description">URL base del CDN, desde el cual estaran disponibles publicamente los objetos</span><pre>$bucketPublicUrl</pre></a></li>
+<li class="property private "><a href="#%24buckets" title="$buckets :: Buckets disponibles en Amazon S3"><span class="description">Buckets disponibles en Amazon S3</span><pre>$buckets</pre></a></li>
+<li class="property private "><a href="#%24s3" title="$s3 :: Almacenamos la instancia de AmazonS3"><span class="description">Almacenamos la instancia de AmazonS3</span><pre>$s3</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CS3" id="\S3"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/S3.html">S3</a>
+</li>
+</ul>
+<div href="../classes/S3.html" class="element class">
+<p class="short_description">S3</p>
+<div class="details">
+<p class="long_description"><p>Driver para consumir los servicios de la API de Amazon S3</p></p>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/CDN.html">CDN</a></td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\AmazonS3</td>
+</tr>
+<tr>
+<th>used-by</th>
+<td>CDN class</td>
+</tr>
+<tr>
+<th>example</th>
+<td>http://docs.amazonwebservices.com/AWSSDKforPHP/latest/index.html#m=AmazonS3 Documentacion API Amazon S3</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>__construct</h2>
+<pre>__construct(string $bucket) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$bucket</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="__toString" id="__toString"></a><div class="element clickable method public __toString" data-toggle="collapse" data-target=".__toString .collapse">
+<h2>__toString</h2>
+<pre>__toString() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="cleanBucket" id="cleanBucket"></a><div class="element clickable method public cleanBucket" data-toggle="collapse" data-target=".cleanBucket .collapse">
+<h2>cleanBucket</h2>
+<pre>cleanBucket() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="connect" id="connect"></a><div class="element clickable method public connect" data-toggle="collapse" data-target=".connect .collapse">
+<h2>connect</h2>
+<pre>connect() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Conectamos con la API de Amazon S3</p></p>
+<table class="table table-bordered"><tr>
+<th>uses</th>
+<td>\global\sdk/config.inc.php</td>
+</tr></table>
+</div></div>
+</div>
+<a name="createBucket" id="createBucket"></a><div class="element clickable method public createBucket" data-toggle="collapse" data-target=".createBucket .collapse">
+<h2>createBucket</h2>
+<pre>createBucket(\$string $bucket) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$bucket</h4>
+<code>\$string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="createObjectFromData" id="createObjectFromData"></a><div class="element clickable method public createObjectFromData" data-toggle="collapse" data-target=".createObjectFromData .collapse">
+<h2>createObjectFromData</h2>
+<pre>createObjectFromData(string $object, string $data, array $headers, array $meta) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Crea un objeto en el bucket de Amazon</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>string</code><p>nombre del objeto a almacenar, incluido prefijos por ej. path/subpath/file.png</p>
+</div>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>string</code><p>datos a almacenar dentro del objeto por ej. 'hola mundo'</p>
+</div>
+<div class="subelement argument">
+<h4>$headers</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$meta</h4>
+<code>array</code>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/ObjectOperationException.html">\ObjectOperationException</a></code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="createObjectFromFile" id="createObjectFromFile"></a><div class="element clickable method public createObjectFromFile" data-toggle="collapse" data-target=".createObjectFromFile .collapse">
+<h2>createObjectFromFile</h2>
+<pre>createObjectFromFile(string $object, string $file, array $headers, array $meta) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$file</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$headers</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$meta</h4>
+<code>array</code>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/ObjectOperationException.html">\ObjectOperationException</a></code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="deleteBucket" id="deleteBucket"></a><div class="element clickable method public deleteBucket" data-toggle="collapse" data-target=".deleteBucket .collapse">
+<h2>deleteBucket</h2>
+<pre>deleteBucket(string $bucket) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$bucket</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="deleteObject" id="deleteObject"></a><div class="element clickable method public deleteObject" data-toggle="collapse" data-target=".deleteObject .collapse">
+<h2>deleteObject</h2>
+<pre>deleteObject(string $object) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>string</code>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/ObjectOperationException.html">\ObjectOperationException</a></code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="downloadObject" id="downloadObject"></a><div class="element clickable method public downloadObject" data-toggle="collapse" data-target=".downloadObject .collapse">
+<h2>downloadObject</h2>
+<pre>downloadObject(string $object) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Genera la descarga de la imagen</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>string</code>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/ObjectOperationException.html">\ObjectOperationException</a></code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a name="getBucket" id="getBucket"></a><div class="element clickable method public getBucket" data-toggle="collapse" data-target=".getBucket .collapse">
+<h2>getBucket</h2>
+<pre>getBucket() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getBucketList" id="getBucketList"></a><div class="element clickable method public getBucketList" data-toggle="collapse" data-target=".getBucketList .collapse">
+<h2>getBucketList</h2>
+<pre>getBucketList(string $bucket) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$bucket</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getBucketPublicUrl" id="getBucketPublicUrl"></a><div class="element clickable method public getBucketPublicUrl" data-toggle="collapse" data-target=".getBucketPublicUrl .collapse">
+<h2>getBucketPublicUrl</h2>
+<pre>getBucketPublicUrl() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getObject" id="getObject"></a><div class="element clickable method public getObject" data-toggle="collapse" data-target=".getObject .collapse">
+<h2>getObject</h2>
+<pre>getObject(string $object) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>string</code>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/ObjectOperationException.html">\ObjectOperationException</a></code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getObjectDetails" id="getObjectDetails"></a><div class="element clickable method public getObjectDetails" data-toggle="collapse" data-target=".getObjectDetails .collapse">
+<h2>getObjectDetails</h2>
+<pre>getObjectDetails(string $object) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>string</code>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/ObjectOperationException.html">\ObjectOperationException</a></code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getObjectList" id="getObjectList"></a><div class="element clickable method public getObjectList" data-toggle="collapse" data-target=".getObjectList .collapse">
+<h2>getObjectList</h2>
+<pre>getObjectList(string $prefix) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$prefix</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="getObjectUrl" id="getObjectUrl"></a><div class="element clickable method public getObjectUrl" data-toggle="collapse" data-target=".getObjectUrl .collapse">
+<h2>getObjectUrl</h2>
+<pre>getObjectUrl(string $object) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="setBucket" id="setBucket"></a><div class="element clickable method public setBucket" data-toggle="collapse" data-target=".setBucket .collapse">
+<h2>setBucket</h2>
+<pre>setBucket(string $bucket) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Definimos el bucket con el que se trabajara a a aprtir del valor de la variable de ambiente
+APPLICATION_ENV, o de la variable $bucket pasada al metodo</p></p>
+<table class="table table-bordered"><tr>
+<th>todo</th>
+<td>estar atentos al cambio del valor para pre de la variable APPLICATION_ENV
+ya que en breve propusieron cambiarla</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$bucket</h4>
+<code>string</code>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/BuckeOperationException.html">\BuckeOperationException</a></code></th>
+<td></td>
+</tr></table>
+</div></div>
+</div>
+<a name="setBucketPublicUrl" id="setBucketPublicUrl"></a><div class="element clickable method public setBucketPublicUrl" data-toggle="collapse" data-target=".setBucketPublicUrl .collapse">
+<h2>setBucketPublicUrl</h2>
+<pre>setBucketPublicUrl() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="logException" id="logException"></a><div class="element clickable method private logException" data-toggle="collapse" data-target=".logException .collapse">
+<h2>logException</h2>
+<pre>logException(object $e) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Logueamos los excepciones a syslog tal cual habia solicitado
+la gente de infraestrucura de la empresa</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$e</h4>
+<code>object</code><p>Exception</p></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24bucket" id="$bucket"> </a><div class="element clickable property private $bucket" data-toggle="collapse" data-target=".$bucket .collapse">
+<h2>Nombre del bucket.</h2>
+<pre>$bucket : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"><p>Cambia dependiendo del entorno en el que trabajemos</p></p></div></div>
+</div>
+<a name="%24bucketPublicUrl" id="$bucketPublicUrl"> </a><div class="element clickable property private $bucketPublicUrl" data-toggle="collapse" data-target=".$bucketPublicUrl .collapse">
+<h2>URL base del CDN, desde el cual estaran disponibles publicamente los objetos</h2>
+<pre>$bucketPublicUrl : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24buckets" id="$buckets"> </a><div class="element clickable property private $buckets" data-toggle="collapse" data-target=".$buckets .collapse">
+<h2>Buckets disponibles en Amazon S3</h2>
+<pre>$buckets : \$buckets</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24s3" id="$s3"> </a><div class="element clickable property private $s3" data-toggle="collapse" data-target=".$s3 .collapse">
+<h2>Almacenamos la instancia de AmazonS3</h2>
+<pre>$s3 : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a10</a> and<br>
+            generated on 2012-11-27T14:12:01-03:00.<br></footer></div>
+</div>
+</body>
+</html>

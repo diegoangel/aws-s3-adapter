@@ -1,0 +1,1050 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project version="2.0.0a10" title="CDN Amazon S3 Refactor">
+  <file path="CDN.php" hash="3e4e096fd5f4f59c8b5722584364ce7e" package="proyectoComunidad">
+    <docblock line="3">
+      <description><![CDATA[proyectoComunidad]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="3" name="package" description="proyectoComunidad"/>
+    </docblock>
+    <include line="8" type="Require Once" package="Default">
+      <name>CDNInterface.php</name>
+    </include>
+    <include line="9" type="Require Once" package="Default">
+      <name>S3/S3.php</name>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="22" package="CDN">
+      <extends/>
+      <implements>\CDNInterface</implements>
+      <name>CDN</name>
+      <full_name>\CDN</full_name>
+      <docblock line="11">
+        <description><![CDATA[CDN]]></description>
+        <long-description><![CDATA[<p>Wrapper que utiliza los nombres y firmas de metodos legacy de la API de Cloudfiles
+para no tener que cambiar la implementacion en las clases y facilitar
+la integracion de la API de Amazon S3</p>]]></long-description>
+        <tag line="11" name="example" description="http://en.wikipedia.org/wiki/Adapter_pattern"/>
+        <tag line="11" name="package" description="CDN"/>
+        <tag line="11" name="uses" description="\global\S3" refers="\global\S3"/>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="29" namespace="global" package="Default">
+        <name>$cdn</name>
+        <default><![CDATA[]]></default>
+        <docblock line="24">
+          <description><![CDATA[Instancia de S3]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="var" description="instancia de S3" type="object">
+            <type by_reference="false">object</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="38" namespace="global" package="Default">
+        <name>$seudoContainer</name>
+        <default><![CDATA[]]></default>
+        <docblock line="31">
+          <description><![CDATA[En Amazon S3 es el primer nivel de directorios.]]></description>
+          <long-description><![CDATA[<p>En Cloudfiles serian los containers. En Amazon S3 tenemos un solo "container", llamado bucket
+El nombre del bucket lo obtenemos de un atributo de la instancia S3 publico a traves de un metodo</p>]]></long-description>
+          <tag line="31" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="45" namespace="global" package="Default">
+        <name>$s3BucketUrl</name>
+        <default><![CDATA[]]></default>
+        <docblock line="40">
+          <description><![CDATA[URL publica del bucket de Amazon S3]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="40" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="true" visibility="public" line="53" namespace="global" package="Default">
+        <name>$instances</name>
+        <default><![CDATA[0]]></default>
+        <docblock line="47">
+          <description><![CDATA[Total de instancias creadas]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="47" name="static" description="int $instances cantidad de instancias creadas"/>
+          <tag line="47" name="example" description="http://php.net/manual/es/language.oop5.cloning.php"/>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="61" namespace="global" package="Default">
+        <name>$instance</name>
+        <default><![CDATA[]]></default>
+        <docblock line="55">
+          <description><![CDATA[Almacenamos el numero de la instancia que se esta ejecutando]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="55" name="var" description="numero de la instancia ejecutandose en este momento" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="55" name="example" description="http://php.net/manual/es/language.oop5.cloning.php"/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="68" package="CDN">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="63">
+          <description><![CDATA[__construct]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="63" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="91" package="CDN">
+        <name>set_container</name>
+        <full_name>set_container</full_name>
+        <docblock line="79">
+          <description><![CDATA[set_container]]></description>
+          <long-description><![CDATA[<p>Definimos el nombre del directorio que utilizaremos para subir objetos
+Esto vendria a ser lo que un container en Cloudfiles
+Guardamos el nombre del directorio
+Clonamos el objeto y creamos una nueva instancia y mantenemos la apariencia
+de conectarnos a diferentes containers, como se hacia en Cloudfiles</p>]]></long-description>
+          <tag line="79" name="exampĺe" description="http://php.net/manual/es/language.oop5.cloning.php"/>
+          <tag line="79" name="param" description="nombre del directorio a utilizar y que representa a un &quot;container&quot; en Amazon S3" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="91">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="113" package="CDN">
+        <name>create_container</name>
+        <full_name>create_container</full_name>
+        <docblock line="99">
+          <description><![CDATA[create_container]]></description>
+          <long-description><![CDATA[<p>En Amazon S3 no se pueden crear buckets adicionales por lo que para suplir esta
+carencia creamos directorios en el root del bucket que imitaran a los containers de Cloudfiles
+Como no podemos crear directorios vacios, almacenamos el nombre en el atributo
+self::seudoContainer,  en el metodo self::set_container, y luego cuando se crea un objeto se
+creara añadiendole este prefijo lo que reflejara la creacion del directorio en Amazon S3</p>]]></long-description>
+          <tag line="99" name="see" description="\global\self::seudoContainer" refers="\global\self::seudoContainer"/>
+          <tag line="99" name="see" description="\global\self::set_container()" refers="\global\self::set_container()"/>
+          <tag line="99" name="param" description="solo presente por compatibilidad con la interface, no se utiliza" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="99" name="return" description="" type="null">
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="113">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="124" package="CDN">
+        <name>delete_container</name>
+        <full_name>delete_container</full_name>
+        <docblock line="118">
+          <description><![CDATA[delete_container]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="118" name="throws" description="" type="\ObjectOperationException">
+            <type by_reference="false">\ObjectOperationException</type>
+          </tag>
+          <tag line="118" name="param" description="solo presente por compatibilidad con la interface, no se utiliza" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="124">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="148" package="CDN">
+        <name>list_containers</name>
+        <full_name>list_containers</full_name>
+        <docblock line="142">
+          <description><![CDATA[list_containers]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="142" name="todo" description="este metodo deberia retornar un array con el primer nivel de directorios de S3"/>
+          <tag line="142" name="return" description="" type="null">
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="158" package="CDN">
+        <name>list_container_objects</name>
+        <full_name>list_container_objects</full_name>
+        <docblock line="153">
+          <description><![CDATA[list_container_objects]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="153" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="170" package="CDN">
+        <name>write_file</name>
+        <full_name>write_file</full_name>
+        <docblock line="163">
+          <description><![CDATA[write_file]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="163" name="param" description="path al archivo" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="163" name="param" description="nombre del archivo con el que se va a guardar en Amazon S3" type="string" variable="$filename">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="163" name="param" description="solo presente por compatibilidad con la interface, no se utiliza" type="string" variable="$filetype">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="170">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="170">
+          <name>$filename</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+        <argument line="170">
+          <name>$filetype</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="189" package="CDN">
+        <name>get_object</name>
+        <full_name>get_object</full_name>
+        <docblock line="183">
+          <description><![CDATA[get_object]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="183" name="param" description="nombre del objeto del cual se desea obtener informacion" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="183" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="189">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="203" package="CDN">
+        <name>getContentType</name>
+        <full_name>getContentType</full_name>
+        <docblock line="194">
+          <description><![CDATA[getContentType]]></description>
+          <long-description><![CDATA[<p>Este metodo no se utiliza, ya que la clase AmazonS3 ya tiene
+un metodo que hace lo mismo. Se conserva para compatibilidad con la interfaz</p>]]></long-description>
+          <tag line="194" name="param" description="" type="string" variable="$filename">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="194" name="return" description="" type="null">
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="203">
+          <name>$filename</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="216" package="CDN">
+        <name>deleteObject</name>
+        <full_name>deleteObject</full_name>
+        <docblock line="208">
+          <description><![CDATA[deleteObject]]></description>
+          <long-description><![CDATA[<p>Eliminamos el objeto del bucket de Amazon S3</p>]]></long-description>
+          <tag line="208" name="param" description="nombre del archivo a eliminar" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="208" name="return" description="" type="bool">
+            <type by_reference="false">bool</type>
+          </tag>
+        </docblock>
+        <argument line="216">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="234" package="CDN">
+        <name>__get</name>
+        <full_name>__get</full_name>
+        <docblock line="226">
+          <description><![CDATA[Manejamos los accesos a los atributos de la clase, definidos o no
+Solo permitimos el acceso a atributos de la clase publicos]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="226" name="trows" description="UnsupportedOperationException"/>
+          <tag line="226" name="param" description="nombre del atributo al cual se quiere acceder" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="226" name="return" description="" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="234">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="265" package="CDN">
+        <name>__call</name>
+        <full_name>__call</full_name>
+        <docblock line="257">
+          <description><![CDATA[Manejamos las llamadas a metodos legacy de Cloudfiles que no definimos]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="257" name="trows" description="UnsupportedOperationException"/>
+          <tag line="257" name="param" description="nombre del metodo llamado" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="257" name="param" description="array de argumentos pasados al metodo" type="array" variable="$args">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="257" name="return" description="" type="null">
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="265">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="265">
+          <name>$args</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="282" package="CDN">
+        <name>__callStatic</name>
+        <full_name>__callStatic</full_name>
+        <docblock line="274">
+          <description><![CDATA[Manejamos las llamadas a metodos estaticos legacy de Cloudfiles que no definimos]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="274" name="trows" description="UnsupportedOperationException"/>
+          <tag line="274" name="param" description="nombre del metodo llamado" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="274" name="param" description="array de argumentos pasados al metodo" type="array" variable="$args">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="274" name="return" description="" type="null">
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="282">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="282">
+          <name>$args</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="299" package="CDN">
+        <name>__clone</name>
+        <full_name>__clone</full_name>
+        <docblock line="291">
+          <description><![CDATA[__clone]]></description>
+          <long-description><![CDATA[<p>Cuando se clone la instancia se incrementara el numero de instancias creadas
+y se asignara a self::instance el numero de instancia actual clonada</p>]]></long-description>
+          <tag line="291" name="example" description="http://php.net/manual/es/language.oop5.cloning.php"/>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="CDNInterface.php" hash="b1ef854154c3937ca79ee5bea37e6cb7" package="proyectoComunidad">
+    <docblock line="2">
+      <description><![CDATA[proyectoComunidad]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="proyectoComunidad"/>
+    </docblock>
+    <interface namespace="global" line="16" package="CDN">
+      <name>CDNInterface</name>
+      <full_name>\CDNInterface</full_name>
+      <docblock line="8">
+        <description><![CDATA[CDNInterface]]></description>
+        <long-description><![CDATA[<p>Interface que debe implementar CDN para asegurar la compatibilidad con
+Cloudfiles</p>]]></long-description>
+        <tag line="8" name="package" description="CDN"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="21" package="CDN">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="18">
+          <description><![CDATA[__construct]]></description>
+          <long-description><![CDATA[]]></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="28" package="CDN">
+        <name>set_container</name>
+        <full_name>set_container</full_name>
+        <docblock line="23">
+          <description><![CDATA[set_container]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="param" description="" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="28">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="35" package="CDN">
+        <name>create_container</name>
+        <full_name>create_container</full_name>
+        <docblock line="30">
+          <description><![CDATA[create_container]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="param" description="" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="35">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="42" package="CDN">
+        <name>delete_container</name>
+        <full_name>delete_container</full_name>
+        <docblock line="37">
+          <description><![CDATA[delete_container]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="37" name="param" description="" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="42">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="47" package="CDN">
+        <name>list_containers</name>
+        <full_name>list_containers</full_name>
+        <docblock line="44">
+          <description><![CDATA[list_containers]]></description>
+          <long-description><![CDATA[]]></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="52" package="CDN">
+        <name>list_container_objects</name>
+        <full_name>list_container_objects</full_name>
+        <docblock line="49">
+          <description><![CDATA[list_container_objects]]></description>
+          <long-description><![CDATA[]]></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="61" package="CDN">
+        <name>write_file</name>
+        <full_name>write_file</full_name>
+        <docblock line="54">
+          <description><![CDATA[write_file]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="54" name="param" description="" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="54" name="param" description="" type="string" variable="$filename">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="54" name="param" description="" type="string" variable="$filetype">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="61">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="61">
+          <name>$filename</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+        <argument line="61">
+          <name>$filetype</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="68" package="CDN">
+        <name>get_object</name>
+        <full_name>get_object</full_name>
+        <docblock line="63">
+          <description><![CDATA[get_object]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="63" name="param" description="" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="68">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="75" package="CDN">
+        <name>getContentType</name>
+        <full_name>getContentType</full_name>
+        <docblock line="70">
+          <description><![CDATA[getContentType]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="70" name="param" description="" type="string" variable="$filename">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="75">
+          <name>$filename</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </interface>
+  </file>
+  <file path="S3/S3.php" hash="52cb2c960b0f934f7cd6a870f8a7b703" package="proyectoComunidad">
+    <docblock line="3">
+      <description><![CDATA[proyectoComunidad]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="3" name="package" description="proyectoComunidad"/>
+    </docblock>
+    <include line="8" type="Require Once" package="Default">
+      <name>vendor/sdk.class.php</name>
+    </include>
+    <include line="9" type="Require Once" package="Default">
+      <name>S3Exceptions.php</name>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="21" package="CDN">
+      <extends/>
+      <name>S3</name>
+      <full_name>\S3</full_name>
+      <docblock line="11">
+        <description><![CDATA[S3]]></description>
+        <long-description><![CDATA[<p>Driver para consumir los servicios de la API de Amazon S3</p>]]></long-description>
+        <tag line="11" name="package" description="CDN"/>
+        <tag line="11" name="uses" description="\global\AmazonS3" refers="\global\AmazonS3"/>
+        <tag line="11" name="used-by" description="CDN class"/>
+        <tag line="11" name="example" description="http://docs.amazonwebservices.com/AWSSDKforPHP/latest/index.html#m=AmazonS3 Documentacion API Amazon S3"/>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="28" namespace="global" package="Default">
+        <name>$s3</name>
+        <default><![CDATA[]]></default>
+        <docblock line="23">
+          <description><![CDATA[Almacenamos la instancia de AmazonS3]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="var" description="" type="object">
+            <type by_reference="false">object</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="36" namespace="global" package="Default">
+        <name>$bucket</name>
+        <default><![CDATA['gointegro-devel']]></default>
+        <docblock line="30">
+          <description><![CDATA[Nombre del bucket.]]></description>
+          <long-description><![CDATA[<p>Cambia dependiendo del entorno en el que trabajemos</p>]]></long-description>
+          <tag line="30" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="43" namespace="global" package="Default">
+        <name>$buckets</name>
+        <default><![CDATA[array('development' => 'gointegro-devel', 'PRE' => 'gointegro-pre', 'production' => 'gointegro-pro')]]></default>
+        <docblock line="38">
+          <description><![CDATA[Buckets disponibles en Amazon S3]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="38" name="var" description="" type="\$buckets">
+            <type by_reference="false">\$buckets</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="54" namespace="global" package="Default">
+        <name>$bucketPublicUrl</name>
+        <default><![CDATA[]]></default>
+        <docblock line="49">
+          <description><![CDATA[URL base del CDN, desde el cual estaran disponibles publicamente los objetos]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="49" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="62" package="CDN">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="56">
+          <description><![CDATA[__construct]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="56" name="param" description="" type="string" variable="$bucket">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="56" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="62">
+          <name>$bucket</name>
+          <default><![CDATA['']]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="75" package="CDN">
+        <name>connect</name>
+        <full_name>connect</full_name>
+        <docblock line="67">
+          <description><![CDATA[connect]]></description>
+          <long-description><![CDATA[<p>Conectamos con la API de Amazon S3</p>]]></long-description>
+          <tag line="67" name="uses" description="\global\sdk/config.inc.php" refers="\global\sdk/config.inc.php"/>
+          <tag line="67" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="92" package="CDN">
+        <name>setBucketPublicUrl</name>
+        <full_name>setBucketPublicUrl</full_name>
+        <docblock line="87">
+          <description><![CDATA[setBucketPublicUrl]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="87" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="102" package="CDN">
+        <name>getBucketPublicUrl</name>
+        <full_name>getBucketPublicUrl</full_name>
+        <docblock line="97">
+          <description><![CDATA[getBucketPublicUrl]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="97" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="119" package="CDN">
+        <name>setBucket</name>
+        <full_name>setBucket</full_name>
+        <docblock line="107">
+          <description><![CDATA[setBucket]]></description>
+          <long-description><![CDATA[<p>Definimos el bucket con el que se trabajara a a aprtir del valor de la variable de ambiente
+APPLICATION_ENV, o de la variable $bucket pasada al metodo</p>]]></long-description>
+          <tag line="107" name="todo" description="estar atentos al cambio del valor para pre de la variable APPLICATION_ENV&#10;ya que en breve propusieron cambiarla"/>
+          <tag line="107" name="throws" description="" type="\BuckeOperationException">
+            <type by_reference="false">\BuckeOperationException</type>
+          </tag>
+          <tag line="107" name="param" description="" type="string" variable="$bucket">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="107" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="119">
+          <name>$bucket</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="137" package="CDN">
+        <name>getBucket</name>
+        <full_name>getBucket</full_name>
+        <docblock line="132">
+          <description><![CDATA[getBucket]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="132" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="156" package="CDN">
+        <name>getBucketList</name>
+        <full_name>getBucketList</full_name>
+        <docblock line="150">
+          <description><![CDATA[getBucketList]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="150" name="param" description="" type="string" variable="$bucket">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="150" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="156">
+          <name>$bucket</name>
+          <default><![CDATA['']]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="168" package="CDN">
+        <name>createBucket</name>
+        <full_name>createBucket</full_name>
+        <docblock line="162">
+          <description><![CDATA[createBucket]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="162" name="param" description="" type="\$string" variable="$bucket">
+            <type by_reference="false">\$string</type>
+          </tag>
+          <tag line="162" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="168">
+          <name>$bucket</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="189" package="CDN">
+        <name>deleteBucket</name>
+        <full_name>deleteBucket</full_name>
+        <docblock line="183">
+          <description><![CDATA[deleteBucket]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="183" name="param" description="" type="string" variable="$bucket">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="183" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="189">
+          <name>$bucket</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="208" package="CDN">
+        <name>cleanBucket</name>
+        <full_name>cleanBucket</full_name>
+        <docblock line="203">
+          <description><![CDATA[cleanBucket]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="203" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="224" package="CDN">
+        <name>getObjectList</name>
+        <full_name>getObjectList</full_name>
+        <docblock line="218">
+          <description><![CDATA[getObjectList]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="218" name="param" description="" type="string" variable="$prefix">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="224">
+          <name>$prefix</name>
+          <default><![CDATA['']]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="244" package="CDN">
+        <name>getObject</name>
+        <full_name>getObject</full_name>
+        <docblock line="237">
+          <description><![CDATA[getObject]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="237" name="throws" description="" type="\ObjectOperationException">
+            <type by_reference="false">\ObjectOperationException</type>
+          </tag>
+          <tag line="237" name="param" description="" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="237" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="244">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="268" package="CDN">
+        <name>getObjectUrl</name>
+        <full_name>getObjectUrl</full_name>
+        <docblock line="262">
+          <description><![CDATA[getObjectUrl]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="262" name="param" description="" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="262" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="268">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="288" package="CDN">
+        <name>downloadObject</name>
+        <full_name>downloadObject</full_name>
+        <docblock line="279">
+          <description><![CDATA[downloadObject]]></description>
+          <long-description><![CDATA[<p>Genera la descarga de la imagen</p>]]></long-description>
+          <tag line="279" name="throws" description="" type="\ObjectOperationException">
+            <type by_reference="false">\ObjectOperationException</type>
+          </tag>
+          <tag line="279" name="param" description="" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="279" name="return" description="" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="288">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="323" package="CDN">
+        <name>createObjectFromData</name>
+        <full_name>createObjectFromData</full_name>
+        <docblock line="311">
+          <description><![CDATA[createObjectFromData]]></description>
+          <long-description><![CDATA[<p>Crea un objeto en el bucket de Amazon</p>]]></long-description>
+          <tag line="311" name="throws" description="" type="\ObjectOperationException">
+            <type by_reference="false">\ObjectOperationException</type>
+          </tag>
+          <tag line="311" name="param" description="nombre del objeto a almacenar, incluido prefijos por ej. path/subpath/file.png" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="311" name="param" description="datos a almacenar dentro del objeto por ej. 'hola mundo'" type="string" variable="$data">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="311" name="param" description="" type="array" variable="$headers">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="311" name="param" description="" type="array" variable="$meta">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="311" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="323">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="323">
+          <name>$data</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="323">
+          <name>$headers</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+        <argument line="323">
+          <name>$meta</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="355" package="CDN">
+        <name>createObjectFromFile</name>
+        <full_name>createObjectFromFile</full_name>
+        <docblock line="345">
+          <description><![CDATA[createObjectFromFile]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="345" name="throws" description="" type="\ObjectOperationException">
+            <type by_reference="false">\ObjectOperationException</type>
+          </tag>
+          <tag line="345" name="param" description="" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="345" name="param" description="" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="345" name="param" description="" type="array" variable="$headers">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="345" name="param" description="" type="array" variable="$meta">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="345" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="355">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="355">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="355">
+          <name>$headers</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+        <argument line="355">
+          <name>$meta</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="385" package="CDN">
+        <name>getObjectDetails</name>
+        <full_name>getObjectDetails</full_name>
+        <docblock line="378">
+          <description><![CDATA[getObjectDetails]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="378" name="throws" description="" type="\ObjectOperationException">
+            <type by_reference="false">\ObjectOperationException</type>
+          </tag>
+          <tag line="378" name="param" description="" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="378" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="385">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="410" package="CDN">
+        <name>deleteObject</name>
+        <full_name>deleteObject</full_name>
+        <docblock line="403">
+          <description><![CDATA[deleteObject]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="403" name="throws" description="" type="\ObjectOperationException">
+            <type by_reference="false">\ObjectOperationException</type>
+          </tag>
+          <tag line="403" name="param" description="" type="string" variable="$object">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="403" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="410">
+          <name>$object</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="431" package="CDN">
+        <name>__toString</name>
+        <full_name>__toString</full_name>
+        <docblock line="426">
+          <description><![CDATA[__toString]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="426" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="444" package="CDN">
+        <name>logException</name>
+        <full_name>logException</full_name>
+        <docblock line="436">
+          <description><![CDATA[logException]]></description>
+          <long-description><![CDATA[<p>Logueamos los excepciones a syslog tal cual habia solicitado
+la gente de infraestrucura de la empresa</p>]]></long-description>
+          <tag line="436" name="param" description="Exception" type="object" variable="$e">
+            <type by_reference="false">object</type>
+          </tag>
+        </docblock>
+        <argument line="444">
+          <name>$e</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="S3/S3Exceptions.php" hash="ea163d1b27067a5f415571cc85fa1336" package="proyectoComunidad">
+    <docblock line="3">
+      <description><![CDATA[proyectoComunidad]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="3" name="package" description="proyectoComunidad"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="14" package="CDN">
+      <extends>\Exception</extends>
+      <name>AuthenticationException</name>
+      <full_name>\AuthenticationException</full_name>
+      <docblock line="9">
+        <description><![CDATA[AuthenticationException]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="9" name="package" description="CDN"/>
+      </docblock>
+    </class>
+    <class final="false" abstract="false" namespace="global" line="23" package="CDN">
+      <extends>\Exception</extends>
+      <name>BuckeOperationException</name>
+      <full_name>\BuckeOperationException</full_name>
+      <docblock line="18">
+        <description><![CDATA[BuckeOperationException]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="18" name="package" description="CDN"/>
+      </docblock>
+    </class>
+    <class final="false" abstract="false" namespace="global" line="32" package="CDN">
+      <extends>\Exception</extends>
+      <name>ObjectOperationException</name>
+      <full_name>\ObjectOperationException</full_name>
+      <docblock line="27">
+        <description><![CDATA[AuthenticationException]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="27" name="package" description="CDN"/>
+      </docblock>
+    </class>
+    <class final="false" abstract="false" namespace="global" line="41" package="CDN">
+      <extends>\Exception</extends>
+      <name>CommandLineException</name>
+      <full_name>\CommandLineException</full_name>
+      <docblock line="36">
+        <description><![CDATA[CommandLineException]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="36" name="package" description="CDN"/>
+      </docblock>
+    </class>
+    <class final="false" abstract="false" namespace="global" line="50" package="CDN">
+      <extends>\Exception</extends>
+      <name>UnsupportedOperationException</name>
+      <full_name>\UnsupportedOperationException</full_name>
+      <docblock line="45">
+        <description><![CDATA[UnsupportedOperationException]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="45" name="package" description="CDN"/>
+      </docblock>
+    </class>
+    <source>eJydkMsKwjAQRff5iqy76Q8IPqo7sat+QEwGG2snQx5QEf/dxEVd2Ja2A4HhkpND7mZLNTGWZxnjGSdrniC9KUwbUCuhUpjOjoRsxA0Gb+Q9vw++BvRaCq8NnjoJlJa/V4rj5cvJh3BujOLQeUDl+C95MR6HvXvhIcgGSgK7SDhCzRGu+2F5vcfS1hlj061AddYIc3VDyBxVhS4QGetBLe50kp2SfwARU8yZ</source>
+  </file>
+  <package name="CDN" full_name="CDN"/>
+  <package name="Default" full_name="Default"/>
+  <package name="proyectoComunidad" full_name="proyectoComunidad"/>
+  <namespace name="global" full_name="global"/>
+  <marker count="2">todo</marker>
+  <marker count="0">fixme</marker>
+  <deprecated count="0"/>
+</project>

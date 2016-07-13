@@ -1,0 +1,414 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>CDN Amazon S3 Refactor » \CDNAdapter</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">CDN Amazon S3 Refactor</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/CDN.html"><i class="icon-folder-open"></i> CDN</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul><li>todo 
+                <span class="label label-info">3</span>
+</li></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#__call" title="__call :: Manejamos las llamadas a metodos legacy de Cloudfiles que no definimos"><span class="description">Manejamos las llamadas a metodos legacy de Cloudfiles que no definimos</span><pre>__call()</pre></a></li>
+<li class="method public "><a href="#__callStatic" title="__callStatic :: Manejamos las llamadas a metodos estaticos legacy de Cloudfiles que no definimos"><span class="description">Manejamos las llamadas a metodos estaticos legacy de Cloudfiles que no definimos</span><pre>__callStatic()</pre></a></li>
+<li class="method public "><a href="#__clone" title="__clone :: __clone"><span class="description">__clone</span><pre>__clone()</pre></a></li>
+<li class="method public "><a href="#__construct" title="__construct :: __construct"><span class="description">__construct</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#__get" title="__get :: Manejamos los accesos a los atributos de la clase, definidos o no
+Solo permitimos el acceso a atributos de la clase publicos"><span class="description">Manejamos los accesos a los atributos de la clase, definidos o no
+Solo permitimos el acceso a atributos de la clase publicos</span><pre>__get()</pre></a></li>
+<li class="method public "><a href="#create_container" title="create_container :: create_container"><span class="description">create_container</span><pre>create_container()</pre></a></li>
+<li class="method public "><a href="#delete_container" title="delete_container :: delete_container"><span class="description">delete_container</span><pre>delete_container()</pre></a></li>
+<li class="method public "><a href="#getContentType" title="getContentType :: getContentType"><span class="description">getContentType</span><pre>getContentType()</pre></a></li>
+<li class="method public "><a href="#get_object" title="get_object :: get_object"><span class="description">get_object</span><pre>get_object()</pre></a></li>
+<li class="method public "><a href="#list_container_objects" title="list_container_objects :: list_container_objects"><span class="description">list_container_objects</span><pre>list_container_objects()</pre></a></li>
+<li class="method public "><a href="#list_containers" title="list_containers :: list_containers"><span class="description">list_containers</span><pre>list_containers()</pre></a></li>
+<li class="method public "><a href="#set_container" title="set_container :: set_container"><span class="description">set_container</span><pre>set_container()</pre></a></li>
+<li class="method public "><a href="#write_file" title="write_file :: write_file"><span class="description">write_file</span><pre>write_file()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="property public "><a href="#%24instance" title="$instance :: Almacenamos el numero de la instancia que se esta ejecutando"><span class="description">Almacenamos el numero de la instancia que se esta ejecutando</span><pre>$instance</pre></a></li>
+<li class="property public "><a href="#%24instances" title="$instances :: Total de instancias creadas"><span class="description">Total de instancias creadas</span><pre>$instances</pre></a></li>
+<li class="property public "><a href="#%24s3BucketUrl" title="$s3BucketUrl :: URL publica del bucket de Amazon S3"><span class="description">URL publica del bucket de Amazon S3</span><pre>$s3BucketUrl</pre></a></li>
+<li class="property public "><a href="#%24seudoContainer" title="$seudoContainer :: En Amazon S3 es el primer nivel de directorios."><span class="description">En Amazon S3 es el primer nivel de directorios.</span><pre>$seudoContainer</pre></a></li>
+<li class="nav-header private">» Private</li>
+<li class="property private "><a href="#%24cdn" title="$cdn :: Instancia de S3"><span class="description">Instancia de S3</span><pre>$cdn</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CCDNAdapter" id="\CDNAdapter"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/CDNAdapter.html">CDNAdapter</a>
+</li>
+</ul>
+<div href="../classes/CDNAdapter.html" class="element class">
+<p class="short_description">CDNAdapter</p>
+<div class="details">
+<p class="long_description"><p>Wrapper que utiliza los nombres y firmas de metodos legacy de la API de Cloudfiles
+para no tener que cambiar la implementacion en las clases y facilitar
+la integracion de la API de Amazon S3</p></p>
+<table class="table table-bordered">
+<tr>
+<th>example</th>
+<td>http://en.wikipedia.org/wiki/Adapter_pattern</td>
+</tr>
+<tr>
+<th>package</th>
+<td><a href="../packages/CDN.html">CDN</a></td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\S3</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__call" id="__call"></a><div class="element clickable method public __call" data-toggle="collapse" data-target=".__call .collapse">
+<h2>Manejamos las llamadas a metodos legacy de Cloudfiles que no definimos</h2>
+<pre>__call(string $name, array $args) : null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>trows</th>
+<td>UnsupportedOperationException</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>nombre del metodo llamado</p></div>
+<div class="subelement argument">
+<h4>$args</h4>
+<code>array</code><p>array de argumentos pasados al metodo</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>null</code></div>
+</div></div>
+</div>
+<a name="__callStatic" id="__callStatic"></a><div class="element clickable method public __callStatic" data-toggle="collapse" data-target=".__callStatic .collapse">
+<h2>Manejamos las llamadas a metodos estaticos legacy de Cloudfiles que no definimos</h2>
+<pre>__callStatic(string $name, array $args) : null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>trows</th>
+<td>UnsupportedOperationException</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>nombre del metodo llamado</p></div>
+<div class="subelement argument">
+<h4>$args</h4>
+<code>array</code><p>array de argumentos pasados al metodo</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>null</code></div>
+</div></div>
+</div>
+<a name="__clone" id="__clone"></a><div class="element clickable method public __clone" data-toggle="collapse" data-target=".__clone .collapse">
+<h2>__clone</h2>
+<pre>__clone() </pre>
+<div class="labels"></div>
+<div class="row collapse">
+<div class="span4">
+<p class="long_description"><p>Cuando se clone la instancia se incrementara el numero de instancias creadas
+y se asignara a self::instance el numero de instancia actual clonada</p></p>
+<table class="table table-bordered"><tr>
+<th>example</th>
+<td>http://php.net/manual/es/language.oop5.cloning.php</td>
+</tr></table>
+</div>
+<div class="span4">
+<h3>Examples</h3>
+<pre class="prettyprint linenums"></pre>
+</div>
+</div>
+</div>
+<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>__construct</h2>
+<pre>__construct() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="__get" id="__get"></a><div class="element clickable method public __get" data-toggle="collapse" data-target=".__get .collapse">
+<h2>Manejamos los accesos a los atributos de la clase, definidos o no
+Solo permitimos el acceso a atributos de la clase publicos</h2>
+<pre>__get(string $name) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>trows</th>
+<td>UnsupportedOperationException</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>nombre del atributo al cual se quiere acceder</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a name="create_container" id="create_container"></a><div class="element clickable method public create_container" data-toggle="collapse" data-target=".create_container .collapse">
+<h2>create_container</h2>
+<pre>create_container(string $name) : null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>En Amazon S3 no se pueden crear buckets adicionales por lo que para suplir esta
+carencia creamos directorios en el root del bucket que imitaran a los containers de Cloudfiles
+Como no podemos crear directorios vacios, almacenamos el nombre en el atributo
+self::seudoContainer,  en el metodo self::set_container, y luego cuando se crea un objeto se
+creara añadiendole este prefijo lo que reflejara la creacion del directorio en Amazon S3</p></p>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td>\global\self::seudoContainer</td>
+</tr>
+<tr>
+<th>see</th>
+<td>\global\self::set_container()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>solo presente por compatibilidad con la interface, no se utiliza</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>null</code></div>
+</div></div>
+</div>
+<a name="delete_container" id="delete_container"></a><div class="element clickable method public delete_container" data-toggle="collapse" data-target=".delete_container .collapse">
+<h2>delete_container</h2>
+<pre>delete_container(string $name) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>solo presente por compatibilidad con la interface, no se utiliza</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/ObjectOperationException.html">\ObjectOperationException</a></code></th>
+<td></td>
+</tr></table>
+</div></div>
+</div>
+<a name="getContentType" id="getContentType"></a><div class="element clickable method public getContentType" data-toggle="collapse" data-target=".getContentType .collapse">
+<h2>getContentType</h2>
+<pre>getContentType(string $filename) : null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Este metodo no se utiliza, ya que la clase AmazonS3 ya tiene
+un metodo que hace lo mismo. Se conserva para compatibilidad con la interfaz</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$filename</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>null</code></div>
+</div></div>
+</div>
+<a name="get_object" id="get_object"></a><div class="element clickable method public get_object" data-toggle="collapse" data-target=".get_object .collapse">
+<h2>get_object</h2>
+<pre>get_object(string $file) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$file</h4>
+<code>string</code><p>nombre del objeto del cual se desea obtener informacion</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="list_container_objects" id="list_container_objects"></a><div class="element clickable method public list_container_objects" data-toggle="collapse" data-target=".list_container_objects .collapse">
+<h2>list_container_objects</h2>
+<pre>list_container_objects() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="list_containers" id="list_containers"></a><div class="element clickable method public list_containers" data-toggle="collapse" data-target=".list_containers .collapse">
+<h2>list_containers</h2>
+<pre>list_containers() : null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>todo</th>
+<td>este metodo deberia retornar un array con el primer nivel de directorios de S3</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>null</code></div>
+</div></div>
+</div>
+<a name="set_container" id="set_container"></a><div class="element clickable method public set_container" data-toggle="collapse" data-target=".set_container .collapse">
+<h2>set_container</h2>
+<pre>set_container(string $name) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Definimos el nombre del directorio que utilizaremos para subir objetos
+Esto vendria a ser lo que un container en Cloudfiles
+Guardamos el nombre del directorio
+Clonamos el objeto y creamos una nueva instancia y mantenemos la apariencia
+de conectarnos a diferentes containers, como se hacia en Cloudfiles</p></p>
+<table class="table table-bordered"><tr>
+<th>exampĺe</th>
+<td>http://php.net/manual/es/language.oop5.cloning.php</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>nombre del directorio a utilizar y que representa a un "container" en Amazon S3</p>
+</div>
+</div></div>
+</div>
+<a name="write_file" id="write_file"></a><div class="element clickable method public write_file" data-toggle="collapse" data-target=".write_file .collapse">
+<h2>write_file</h2>
+<pre>write_file(string $file, string $filename, string $filetype) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$file</h4>
+<code>string</code><p>path al archivo</p></div>
+<div class="subelement argument">
+<h4>$filename</h4>
+<code>string</code><p>nombre del archivo con el que se va a guardar en Amazon S3</p></div>
+<div class="subelement argument">
+<h4>$filetype</h4>
+<code>string</code><p>solo presente por compatibilidad con la interface, no se utiliza</p></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24instance" id="$instance"> </a><div class="element clickable property public $instance" data-toggle="collapse" data-target=".$instance .collapse">
+<h2>Almacenamos el numero de la instancia que se esta ejecutando</h2>
+<pre>$instance : int</pre>
+<div class="labels"></div>
+<div class="row collapse">
+<div class="span4">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>example</th>
+<td>http://php.net/manual/es/language.oop5.cloning.php</td>
+</tr></table>
+</div>
+<div class="span4">
+<h3>Examples</h3>
+<pre class="prettyprint linenums"></pre>
+</div>
+</div>
+</div>
+<a name="%24instances" id="$instances"> </a><div class="element clickable property public $instances" data-toggle="collapse" data-target=".$instances .collapse">
+<h2>Total de instancias creadas</h2>
+<pre>$instances </pre>
+<div class="labels"></div>
+<div class="row collapse">
+<div class="span4">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>static</th>
+<td>int $instances cantidad de instancias creadas</td>
+</tr>
+<tr>
+<th>example</th>
+<td>http://php.net/manual/es/language.oop5.cloning.php</td>
+</tr>
+</table>
+</div>
+<div class="span4">
+<h3>Examples</h3>
+<pre class="prettyprint linenums"></pre>
+</div>
+</div>
+</div>
+<a name="%24s3BucketUrl" id="$s3BucketUrl"> </a><div class="element clickable property public $s3BucketUrl" data-toggle="collapse" data-target=".$s3BucketUrl .collapse">
+<h2>URL publica del bucket de Amazon S3</h2>
+<pre>$s3BucketUrl : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24seudoContainer" id="$seudoContainer"> </a><div class="element clickable property public $seudoContainer" data-toggle="collapse" data-target=".$seudoContainer .collapse">
+<h2>En Amazon S3 es el primer nivel de directorios.</h2>
+<pre>$seudoContainer : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"><p>En Cloudfiles serian los containers. En Amazon S3 tenemos un solo "container", llamado bucket
+El nombre del bucket lo obtenemos de un atributo de la instancia S3 publico a traves de un metodo</p></p></div></div>
+</div>
+<a name="%24cdn" id="$cdn"> </a><div class="element clickable property private $cdn" data-toggle="collapse" data-target=".$cdn .collapse">
+<h2>Instancia de S3</h2>
+<pre>$cdn : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a10</a> and<br>
+            generated on 2012-11-22T12:47:49-03:00.<br></footer></div>
+</div>
+</body>
+</html>
